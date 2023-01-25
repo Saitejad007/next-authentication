@@ -1,8 +1,11 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import Image from "next/image";
+import { useSession, signIn, signOut } from "next-auth/react";
+import Link from "next/link";
+import styles from "../styles/Home.module.css";
 
 export default function Home() {
+  const { data: session } = useSession();
   return (
     <div className={styles.container}>
       <Head>
@@ -15,9 +18,30 @@ export default function Home() {
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
+        <ul>
+          <li>
+            <Link href="/protected">Protected 1</Link>
+          </li>
+          <li>
+            <Link href="/protected2">Protected 2</Link>
+          </li>
+          <li>
+            <Link href="/public">Public page</Link>
+          </li>
+          <li>
+            <button
+              className={`mt-10 uppercase text-sm font-bold tracking-wide text-gray-100 p-3 rounded-lg  focus:outline-none focus:shadow-outline hover:shadow-xl active:scale-90 transition duration-150  ${
+                session ? "bg-red-400" : "bg-green-400"
+              }`}
+              onClick={() => (session ? signOut() : signIn())}
+            >
+              {session ? "Sign Out" : "Sign In"}
+            </button>
+          </li>
+        </ul>
 
         <p className={styles.description}>
-          Get started by editing{' '}
+          Get started by editing{" "}
           <code className={styles.code}>pages/index.tsx</code>
         </p>
 
@@ -60,12 +84,12 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
+  );
 }
